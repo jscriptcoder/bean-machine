@@ -1,13 +1,13 @@
 import React from 'react'
 
 import './BeanBucket.css'
-
-import { emitter } from '../../utils'
 import Bucket from '../../models/bucket'
+import Ball from '../../models/ball'
 
 interface BeanBucketProps {
   model: Bucket
   capacity: number
+  onEmpty: (balls: Ball[]) => void
 }
 
 interface BeanBucketState {
@@ -28,15 +28,17 @@ export default class BeanBucket
   }
 
   onClick = () => {
+    const { onEmpty } = this.props
     const { bucket, opened } = this.state
     const numBalls = bucket.balls.length
 
     if (!opened && numBalls > 0) {
+      const balls = bucket.balls.slice(0) // copy content
       bucket.balls.length = 0 // empty the bucket
 
       this.setState({ bucket, opened: true })
 
-      emitter.emit('new_machine', numBalls)
+      onEmpty(balls)
     }
   }
 

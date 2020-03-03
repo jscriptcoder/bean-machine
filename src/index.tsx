@@ -4,4 +4,4 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App numBuckets={10} />, document.getElementById('root'))

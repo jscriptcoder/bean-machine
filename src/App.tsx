@@ -1,18 +1,23 @@
-import React from 'react';
+import React from 'react'
+import { Affix } from 'antd'
 
-import './App.css';
+import './App.css'
 import { emitter, initArray } from './utils'
 import ControlPanel from './components/ControlPanel'
 import BeanMachine from './components/BeanMachine'
-import Machine from './models/machine';
-import Ball from './models/ball';
+import Machine from './models/machine'
+import Ball from './models/ball'
+
+interface AppProps {
+  numBuckets: number
+}
 
 interface AppState {
   started: boolean
   machines: Machine[]
 }
 
-export default class App extends React.Component<{}, AppState> {
+export default class App extends React.Component<AppProps, AppState> {
   state = {
     started: false,
     machines: []
@@ -21,11 +26,13 @@ export default class App extends React.Component<{}, AppState> {
   componentDidMount() {
     emitter.on('start', this.onStarted)
     emitter.on('reset', this.onReset)
-    emitter.on('new_machine', this.onNewMachine)
+    emitter.on('openbucket', this.onOpenBucket)
   }
 
   onStarted = async (numBalls: number) => {
-    const machine = new Machine(10)
+    const { numBuckets } = this.props
+
+    const machine = new Machine(numBuckets)
     const balls = initArray(numBalls, () => new Ball())
 
     this.setState({
@@ -35,7 +42,7 @@ export default class App extends React.Component<{}, AppState> {
 
     await machine.dropAllBalls(balls)
 
-    this.forceUpdate()
+    this.forceUpdate() // model changed. We need to re-render
   }
 
   onReset = () => {
@@ -45,15 +52,18 @@ export default class App extends React.Component<{}, AppState> {
     })
   }
 
-  onNewMachine = async (numBalls: number) => {
-    const machine = new Machine(10)
-    const balls = initArray(numBalls, () => new Ball())
+  onOpenBucket = async (balls: Ball[]) => {
+    const { numBuckets } = this.props
+    const machine = new Machine(numBuckets)
 
     this.setState({ machines: [...this.state.machines, machine] })
 
     await machine.dropAllBalls(balls)
 
-    this.forceUpdate()
+    this.forceUpdate() // model changed. We need to re-render
+
+    // Nasty scrolling
+    window.scrollTo(0,document.body.scrollHeight)
   }
 
   render() {
@@ -61,7 +71,11 @@ export default class App extends React.Component<{}, AppState> {
 
     return (
       <div className="App">
-        <ControlPanel defaultNumBalls={10000} disabled={started} />
+
+        <Affix offsetTop={16}>
+          <ControlPanel defaultNumBalls={10000} disabled={started} />
+        </Affix>
+
         <div className="App__machines">
           {machines.length === 0 && <span>No Machines</span>}
           {machines.length > 0 && (
@@ -72,6 +86,7 @@ export default class App extends React.Component<{}, AppState> {
             ))
           )}
         </div>
+
       </div>
     )
   }
