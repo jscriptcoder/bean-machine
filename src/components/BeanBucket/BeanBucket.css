@@ -1,0 +1,22 @@
+.BeanBucket {
+  width: 60px;
+  height: 200px;
+  border: 3px solid #1890ff;
+  border-top: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.BeanBucket__balls {
+  font-weight: bold;
+}
+
+.BeanBucket__bar {
+  background-color: #40a9ff;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}

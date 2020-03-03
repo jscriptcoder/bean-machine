@@ -9,10 +9,12 @@ type Path = Dir[]
 export default class Machine {
   buckets: Bucket[]
   bouncingRows: number
+  totalBalls: number
 
   constructor(numBuckets: number = 2) {
     this.buckets = initArray(numBuckets, () => new Bucket())
     this.bouncingRows = this.buckets.length - 1
+    this.totalBalls = 0
   }
 
   dropInBucket(ball: Ball, path: Path) {
@@ -43,7 +45,7 @@ export default class Machine {
   }
 
   async dropAllBalls(balls: Ball[]): Promise<void> {
-    let ballsLeft = balls.length
+    this.totalBalls = balls.length
 
     // We start dropping balls one by one...
     // We make the whole process asynchronous since
