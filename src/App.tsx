@@ -21,7 +21,7 @@ export default class App extends React.Component<{}, AppState> {
   componentDidMount() {
     emitter.on('start', this.onStarted)
     emitter.on('reset', this.onReset)
-    emitter.on('newmachine', this.onNewMachine)
+    emitter.on('new_machine', this.onNewMachine)
   }
 
   onStarted = async (numBalls: number) => {
@@ -49,7 +49,7 @@ export default class App extends React.Component<{}, AppState> {
     const machine = new Machine(10)
     const balls = initArray(numBalls, () => new Ball())
 
-    this.setState({ machines: [...this.state.machines, new Machine(10)] })
+    this.setState({ machines: [...this.state.machines, machine] })
 
     await machine.dropAllBalls(balls)
 

@@ -12,6 +12,10 @@
 
 .BeanBucket__balls {
   font-weight: bold;
+  z-index: 1;
+  padding: 3px;
+  background-color: white;
+  border-radius: 8px;
 }
 
 .BeanBucket__bar {
