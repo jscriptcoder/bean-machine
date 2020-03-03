@@ -1,2 +1,0 @@
-# bean-machine
-Toy project
