@@ -2,4 +2,7 @@
 
 .App .ant-affix { z-index: 20; }
 
-.App__machines {}
+.App__machines h2 {
+  margin-top: 32px;
+  color: #900;
+}

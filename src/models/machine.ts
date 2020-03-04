@@ -49,7 +49,7 @@ export default class Machine {
 
     // We start dropping balls one by one...
     // We make the whole process asynchronous since
-    // it might take some time for the all the ball to finish,
+    // it might take some time for all the ball to finish,
     // plus time between balls. Even though all this is
     // fictitious, we could definitely add those delays.
     await Promise.all(balls.map(async ball => {

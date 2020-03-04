@@ -33,8 +33,12 @@ export default class BeanBucket
     const numBalls = bucket.balls.length
 
     if (!opened && numBalls > 0) {
-      const balls = bucket.balls.slice(0) // copy content
-      bucket.balls.length = 0 // empty the bucket
+      // Copy content. We're gonna drop these guys
+      // in another machine
+      const balls = bucket.balls.slice(0)
+
+      // ... emptying this bucket
+      bucket.balls.length = 0
 
       this.setState({ bucket, opened: true })
 
@@ -52,12 +56,15 @@ export default class BeanBucket
         className="BeanBucket"
         style={{ borderBottom: opened ? 0 : 'auto' }}
         onClick={this.onClick}>
+
         <div className="BeanBucket__balls">
           {bucket.balls.length}
         </div>
+
         <div
           className="BeanBucket__bar"
           style={{ height: `${height}%` }} />
+
       </div>
     )
   }

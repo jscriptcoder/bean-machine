@@ -8,16 +8,16 @@ import BeanMachine from './components/BeanMachine'
 import Machine from './models/machine'
 import Ball from './models/ball'
 
-interface AppProps {
-  numBuckets: number
-}
+interface AppProps { numBuckets: number }
 
 interface AppState {
   started: boolean
   machines: Machine[]
 }
 
-export default class App extends React.Component<AppProps, AppState> {
+export default class App
+  extends React.Component<AppProps, AppState> {
+
   state = {
     started: false,
     machines: []
@@ -42,7 +42,10 @@ export default class App extends React.Component<AppProps, AppState> {
 
     await machine.dropAllBalls(balls)
 
-    this.forceUpdate() // model changed. We need to re-render
+    // Model changed. We need to re-render.
+    // Definitely not the most efficient way to do it,
+    // but for this toy exercise is enough
+    this.forceUpdate()
   }
 
   onReset = () => {
@@ -52,6 +55,9 @@ export default class App extends React.Component<AppProps, AppState> {
     })
   }
 
+  // Triggers when we open a bucket,
+  // dropping the balls from the previous
+  // bucket through a new machine
   onOpenBucket = async (balls: Ball[]) => {
     const { numBuckets } = this.props
     const machine = new Machine(numBuckets)
@@ -62,29 +68,34 @@ export default class App extends React.Component<AppProps, AppState> {
 
     this.forceUpdate() // model changed. We need to re-render
 
-    // Nasty scrolling
+    // Nasty scrolling, wild west like
     window.scrollTo(0,document.body.scrollHeight)
   }
 
   render() {
     const { started, machines } = this.state
 
+    const runningMachines = machines.length
+      ? (
+        machines.map((machine, i) => (
+          <BeanMachine
+            key={i}
+            model={machine} />
+        ))
+      )
+      : <h2>No Machines</h2>
+
     return (
       <div className="App">
 
         <Affix offsetTop={16}>
-          <ControlPanel defaultNumBalls={10000} disabled={started} />
+          <ControlPanel
+            defaultNumBalls={10000}
+            disabled={started} />
         </Affix>
 
         <div className="App__machines">
-          {machines.length === 0 && <span>No Machines</span>}
-          {machines.length > 0 && (
-            machines.map((machine, i) => (
-              <BeanMachine
-                key={i}
-                model={machine} />
-            ))
-          )}
+          {runningMachines}
         </div>
 
       </div>

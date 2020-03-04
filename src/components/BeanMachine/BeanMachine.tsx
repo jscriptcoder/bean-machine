@@ -6,32 +6,32 @@ import Machine from '../../models/machine'
 import BeanBucket from '../BeanBucket'
 import Ball from '../../models/ball'
 
-interface BeanMachineProps {
-  model: Machine
-}
+interface BeanMachineProps { model: Machine }
 
-interface BeanMachineState {
-  clicked: boolean
-}
+interface BeanMachineState { bucketOpened: boolean }
 
 export default class BeanMachine
   extends React.Component<BeanMachineProps, BeanMachineState> {
 
-  state = { clicked: false }
+  state = { bucketOpened: false }
 
   onEmptyBucket = (balls: Ball[]) => {
-    this.setState({ clicked: true })
+    this.setState({ bucketOpened: true })
     emitter.emit('openbucket', balls)
   }
 
   render() {
     const { model } = this.props
-    const { clicked } = this.state
+    const { bucketOpened } = this.state
+
+    const disabledMask = bucketOpened
+      ? <div className="BeanMachine__mask" />
+      : null
 
     return (
       <div className="BeanMachine">
 
-        {clicked && <div className="BeanMachine__mask" />}
+        {disabledMask}
 
         {model.buckets.map((bucket, i) => (
           <BeanBucket

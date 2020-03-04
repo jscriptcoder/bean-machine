@@ -9,9 +9,7 @@ interface ControlPanelProps {
   disabled: boolean
 }
 
-interface ControlPanelState {
-  numBalls: number | undefined
-}
+interface ControlPanelState { numBalls: number | undefined }
 
 export default class ControlPanel
   extends React.Component<ControlPanelProps, ControlPanelState> {
@@ -21,9 +19,23 @@ export default class ControlPanel
     this.state = { numBalls: props.defaultNumBalls }
   }
 
+  onInputChange = (numBalls: number | undefined) => {
+    this.setState({ numBalls })
+  }
+
+  onStartClick = () => {
+    const { numBalls } = this.state
+    emitter.emit('start', numBalls)
+  }
+
+  onResetClick = () => {
+    emitter.emit('reset')
+  }
+
   render() {
     const { disabled } = this.props
     const { numBalls } = this.state
+
     return (
       <div className="ControlPanel">
         Number of balls:
@@ -31,14 +43,14 @@ export default class ControlPanel
         <InputNumber
           value={numBalls}
           disabled={disabled}
-          onChange={numBalls => this.setState({ numBalls })} />
+          onChange={this.onInputChange} />
         <Button
           type="primary"
           disabled={disabled}
-          onClick={() => emitter.emit('start', numBalls)}>Start</Button>
+          onClick={this.onStartClick}>Start</Button>
         <Button
           disabled={!disabled}
-          onClick={() => emitter.emit('reset')}>Reset</Button>
+          onClick={this.onResetClick}>Reset</Button>
       </div>
     )
   }
